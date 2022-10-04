@@ -30,7 +30,7 @@ common common
 
 library
     import:           common
-    exposed-modules:  MyLib
+    exposed-modules:  RRDTool
     hs-source-dirs:   src
 
 test-suite hs-rrd-test
