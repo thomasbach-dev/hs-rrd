@@ -2,7 +2,8 @@ module RRDTool.LowLevelSpec
   ( spec
   ) where
 
-import Test.Syd (Spec, describe, it, runIO, shouldBe)
+import Control.Concurrent (isCurrentThreadBound, rtsSupportsBoundThreads)
+import Test.Syd           (Spec, describe, it, runIO, shouldBe)
 
 import RRDTool.LowLevel
 
@@ -30,3 +31,14 @@ spec = do
   describe "rrd_test_error" $ do
     it "returns a 0" $ do
       rrd_test_error `shouldBe` 0
+
+  describe "bound threads" $ do
+    it "are supported" $ do
+      rtsSupportsBoundThreads
+    result <- runIO isCurrentThreadBound
+    it "we are currently running in one" $ do
+      result
+  describe "rrd_new_context" $ do
+    result <- runIO rrd_new_context
+    it "returns an empty RRDContext" $ do
+      result `shouldBe` RRDContext "" ""
