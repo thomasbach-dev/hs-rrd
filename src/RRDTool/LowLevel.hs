@@ -38,3 +38,6 @@ foreign import capi unsafe "rrd.h rrd_strversion" raw_rrd_strversion :: CString
 -- | Get the current @librrd@ version encdoded as a @'String'@ e.g. @"1.7.2"@.
 rrd_strversion :: IO String
 rrd_strversion = peekCString raw_rrd_strversion
+
+-- | Get the current @librrd@ version encoded as a @'Double'@ e.g. @1.7002@.
+foreign import capi unsafe "rrd.h rrd_version" rrd_version :: Double
