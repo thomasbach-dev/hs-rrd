@@ -27,11 +27,31 @@ module RRDTool.LowLevel
   ) where
 
 import Foreign (Ptr, plusPtr, ForeignPtr, FunPtr, newForeignPtr, withForeignPtr)
-import Foreign.C (CString, peekCString)
+import Foreign.C (CString, peekCString, CInt(..), CTime(..), CULong(..))
 
 #include <rrd.h>
 
--- | “Every thread SHOULD call rrd_get_context() before its first call to any librrd_th function in
+foreign import capi "rrd.h rrd_create_r" rrd_create_r
+  :: CString     -- ^ filename
+  -> CULong      -- ^ pdp_step
+  -> CTime       -- ^ last_up
+  -> CInt        -- ^ argc
+  -> Ptr CString -- ^ argv
+  -> IO CInt
+
+foreign import capi "rrd.h rrd_create_r2" rrd_create_r2
+  :: CString     -- ^ filename
+  -> CULong      -- ^ pdp_step
+  -> CTime       -- ^ last_up
+  -> CInt        -- ^ no_overwrite
+  -> Ptr CString -- ^ sources
+  -> CString     -- ^ template
+  -> CInt        -- ^ argc
+  -> Ptr CString -- ^ argv
+  -> IO CInt
+
+-- | Citing the [rrdthreads](https://oss.oetiker.ch/rrdtool/prog/rrdthreads.en.html) manual:
+-- “Every thread SHOULD call rrd_get_context() before its first call to any librrd_th function in
 -- order to set up thread specific data.”
 --
 -- This sets 'rrd_free_context' as the finalizer to the result of 'rrd_get_context_raw'.
